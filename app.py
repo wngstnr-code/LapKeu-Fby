@@ -97,7 +97,7 @@ with tab1:
     if uploaded_file:
         img = Image.open(uploaded_file)
         st.image(img, width=250)
-        if st.button("Proses", key="btn_scan"):
+        if st.button("🔍 Proses", key="btn_scan"):
             with st.spinner('AI sedang bekerja...'):
                 res = process_receipt(img)
                 success, msg = save_to_gsheet(res)
