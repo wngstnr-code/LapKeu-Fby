@@ -91,7 +91,7 @@ def process_receipt(image):
     return response.text
 
 # --- TAMPILAN WEB ---
-st.title("🧾 AI Keuangan Bulanan")
+st.title("💰 AI Keuangan Bulanan Talita Feby")
 
 # Pilihan metode input
 tab1, tab2 = st.tabs(["📷 Scan Nota", "✍️ Input Manual"])
@@ -103,7 +103,7 @@ with tab1:
     if uploaded_file:
         img = Image.open(uploaded_file)
         st.image(img, width=250)
-        if st.button("Proses", key="btn_scan"):
+        if st.button("SIKATSSS", key="btn_scan"):
             with st.spinner('AI sedang bekerja...'):
                 res = process_receipt(img)
                 success, msg = save_to_gsheet(res)
@@ -152,7 +152,7 @@ with tab2:
                 })
         
         st.write("---")
-        submitted = st.form_submit_button("💾 Simpan ke Google Sheet", use_container_width=True)
+        submitted = st.form_submit_button("💾 Simpan", use_container_width=True)
         
         if submitted:
             if not toko:
