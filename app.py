@@ -37,7 +37,8 @@ def load_secrets():
         
     return api_key, creds
 
-SHEET_NAME = "Laporan Keuangan Feby" 
+SHEET_NAME = "Laporan Keuangan Feby"
+KATEGORI_LIST = ["Fashion", "Food & Drink","Snack", "Grocery", "Alat Tulis Kantor", "Skincare", "Bodycare", "Make Up", "House Hold"] 
 
 try:
     API_KEY, CREDS = load_secrets()
@@ -69,14 +70,14 @@ def save_to_gsheet(data_json):
             worksheet = sh.worksheet(sheet_title)
         except gspread.exceptions.WorksheetNotFound:
             worksheet = sh.add_worksheet(title=sheet_title, rows="100", cols="20")
-            worksheet.append_row(["Tanggal", "Toko", "Nama Barang", "Jumlah", "Harga Satuan", "Total Item", "Input Time"])
-            worksheet.format('A1:G1', {'textFormat': {'bold': True}})
+            worksheet.append_row(["Tanggal", "Toko", "Kategori", "Nama Barang", "Jumlah", "Harga Satuan", "Total Item", "Input Time"])
+            worksheet.format('A1:H1', {'textFormat': {'bold': True}})
 
         # Insert data
         rows_to_add = []
         waktu = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         for item in data['items']:
-            row = [data.get('tanggal'), data.get('toko'), item.get('nama'), item.get('jumlah'), item.get('harga_satuan'), item.get('total'), waktu]
+            row = [data.get('tanggal'), data.get('toko'), item.get('kategori', '-'), item.get('nama'), item.get('jumlah'), item.get('harga_satuan'), item.get('total'), waktu]
             rows_to_add.append(row)
             
         if rows_to_add:
@@ -87,7 +88,10 @@ def save_to_gsheet(data_json):
         return False, f"Gagal: {e}"
 
 def process_receipt(image):
-    prompt = """Analisis nota ini. Output JSON valid: {"toko": "Str", "tanggal": "YYYY-MM-DD", "items": [{"nama": "Str", "jumlah": Int, "harga_satuan": Int, "total": Int}]}"""
+    prompt = """Analisis nota ini. Output JSON valid: {"toko": "Str", "tanggal": "YYYY-MM-DD", "items": [{"kategori": "Str", "nama": "Str", "jumlah": Int, "harga_satuan": Int, "total": Int}]}
+    
+Kategori yang tersedia: Fashion, Food & Drink, Snack, Grocery, Alat Tulis Kantor, Skincare, Bodycare, Make Up, House Hold.
+Pilih kategori yang paling sesuai untuk setiap barang."""
     response = model.generate_content([prompt, image])
     return response.text
 
@@ -131,19 +135,22 @@ with tab2:
         items_data = []
         for i in range(st.session_state.num_items):
             st.write(f"**Barang {i+1}**")
-            col_a, col_b, col_c = st.columns(3)
+            col_a, col_b, col_c, col_d = st.columns([2, 2, 1, 2])
             
             with col_a:
                 nama_barang = st.text_input(f"Nama Barang", key=f"nama_{i}", placeholder="Contoh: Indomie Goreng")
             with col_b:
-                jumlah = st.number_input(f"Jumlah", key=f"jumlah_{i}", min_value=1, value=1, step=1)
+                kategori = st.selectbox(f"Kategori", KATEGORI_LIST, key=f"kategori_{i}")
             with col_c:
+                jumlah = st.number_input(f"Jumlah", key=f"jumlah_{i}", min_value=1, value=1, step=1)
+            with col_d:
                 harga_satuan = st.number_input(f"Harga Satuan (Rp)", key=f"harga_{i}", min_value=0, value=0, step=100)
             
             if nama_barang:
                 total = jumlah * harga_satuan
                 items_data.append({
                     "nama": nama_barang,
+                    "kategori": kategori,
                     "jumlah": int(jumlah),
                     "harga_satuan": int(harga_satuan),
                     "total": int(total)
