@@ -86,7 +86,7 @@ Pilih kategori yang paling sesuai untuk setiap barang."""
     response = model.generate_content([prompt, image])
     return response.text
 
-st.title("💰 AI Monthly Money Talita Feby")
+st.title("💰 AI Monthly Money Talita Feby 🤍")
 
 tab1, tab2 = st.tabs(["📷 Scan Nota", "✍️ Input Manual"])
 
