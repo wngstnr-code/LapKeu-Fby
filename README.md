@@ -20,10 +20,9 @@ Aplikasi web berbasis AI untuk mencatat dan mengelola pengeluaran bulanan secara
 
 ### 📊 Google Sheets Integration
 - **Sheet otomatis per bulan** (Januari 2026, Februari 2026, dst)
-- **Format Rupiah otomatis** untuk kolom harga
-- **Baris TOTAL otomatis** yang menghitung total pengeluaran
-- Header dengan format bold dan background abu-abu
+- Header dengan format bold
 - Timestamp setiap input data
+- Data tersimpan rapi dengan kolom: Tanggal, Toko, Nama Barang, Jumlah, Harga Satuan, Total Item, Input Time
 
 ## 🚀 Demo
 
@@ -152,8 +151,8 @@ Setiap bulan akan otomatis dibuatkan sheet baru dengan format:
 
 | Tanggal | Toko | Nama Barang | Jumlah | Harga Satuan | Total Item | Input Time |
 |---------|------|-------------|--------|--------------|------------|------------|
-| 2026-01-08 | Indomaret | Indomie | 5 | Rp 3.500 | Rp 17.500 | 2026-01-08 10:30 |
-| | | | | **TOTAL PENGELUARAN:** | **Rp 47.500** | |
+| 2026-01-08 | Indomaret | Indomie | 5 | 3500 | 17500 | 2026-01-08 10:30:15 |
+| 2026-01-08 | Alfamart | Susu | 2 | 15000 | 30000 | 2026-01-08 11:15:30 |
 
 ## 🔒 Keamanan
 
