@@ -79,12 +79,36 @@ def save_to_gsheet(data_json):
         return False, f"Gagal: {e}"
 
 def process_receipt(image):
-    prompt = """Analisis nota ini. Output JSON valid: {"toko": "Str", "tanggal": "YYYY-MM-DD", "items": [{"kategori": "Str", "nama": "Str", "jumlah": Int, "harga_satuan": Int, "total": Int}]}
-    
+    prompt = """Analisis gambar ini dengan sangat teliti:
+
+1. VALIDASI DULU:
+   - Apakah ini foto nota belanja yang jelas terbaca?
+   - Jika foto blur/tidak jelas/tidak bisa dibaca, jawab: {"error": "Foto terlalu blur atau tidak jelas, mohon upload foto yang lebih tajam"}
+   - Jika bukan nota belanja, jawab: {"error": "Ini bukan foto nota belanja, mohon upload foto nota yang valid"}
+   - Jika nota kosong/tidak ada item, jawab: {"error": "Nota tidak memiliki item belanja yang dapat dibaca"}
+
+2. Jika VALID, output JSON: {"toko": "Str", "tanggal": "YYYY-MM-DD", "items": [{"kategori": "Str", "nama": "Str", "jumlah": Int, "harga_satuan": Int, "total": Int}]}
+
 Kategori yang tersedia: Fashion, Food & Drink, Snack, Grocery, Alat Tulis Kantor, Skincare, Bodycare, Make Up, House Hold.
 Pilih kategori yang paling sesuai untuk setiap barang."""
+    
     response = model.generate_content([prompt, image])
-    return response.text
+    result_text = response.text.replace("```json", "").replace("```", "").strip()
+    
+    # Cek apakah ada error dari AI
+    try:
+        parsed = json.loads(result_text)
+        if "error" in parsed:
+            raise ValueError(parsed["error"])
+        # Validasi struktur data
+        if "toko" not in parsed or "items" not in parsed:
+            raise ValueError("Format nota tidak valid atau tidak dapat dibaca dengan jelas")
+        if not parsed["items"] or len(parsed["items"]) == 0:
+            raise ValueError("Tidak ada item yang dapat dibaca dari nota ini")
+    except json.JSONDecodeError:
+        raise ValueError("Foto tidak dapat diproses sebagai nota - mungkin blur, terpotong, atau bukan nota belanja")
+    
+    return result_text
 
 st.title("💰 AI Monthly Money Talita Feby 🤍")
 
@@ -93,16 +117,43 @@ tab1, tab2 = st.tabs(["📷 Scan Nota", "✍️ Input Manual"])
 # TAB 1: SCAN NOTA
 with tab1:
     st.subheader("Upload dan Scan Nota Belanja")
-    uploaded_file = st.file_uploader("Upload Nota", type=["jpg", "png", "jpeg"])
-    if uploaded_file:
-        img = Image.open(uploaded_file)
-        st.image(img, width=250)
-        if st.button("🔍 Proses", key="btn_scan"):
-            with st.spinner('AI sedang bekerja...'):
-                res = process_receipt(img)
-                success, msg = save_to_gsheet(res)
-                if success: st.success(msg)
-                else: st.error(msg)
+    uploaded_files = st.file_uploader("Upload Nota", type=["jpg", "png", "jpeg"], accept_multiple_files=True)
+    if uploaded_files:
+        # Tampilkan semua foto yang diupload dalam grid
+        cols = st.columns(min(len(uploaded_files), 3))
+        images = []
+        for idx, uploaded_file in enumerate(uploaded_files):
+            img = Image.open(uploaded_file)
+            images.append(img)
+            with cols[idx % 3]:
+                st.image(img, width=200, caption=f"Nota {idx+1}")
+        
+        if st.button("🔍 Proses Nota", key="btn_scan"):
+            with st.spinner(f'AI sedang memproses {len(images)} nota...'):
+                success_count = 0
+                error_count = 0
+                for idx, img in enumerate(images):
+                    try:
+                        res = process_receipt(img)
+                        success, msg = save_to_gsheet(res)
+                        if success:
+                            success_count += 1
+                            st.success(f"✅ Nota {idx+1}: {msg}")
+                        else:
+                            error_count += 1
+                            st.error(f"❌ Nota {idx+1}: {msg}")
+                    except ValueError as e:
+                        # Error dari validasi (blur, bukan nota, dll)
+                        error_count += 1
+                        st.error(f"❌ Nota {idx+1}: {str(e)}")
+                    except Exception as e:
+                        # Error lainnya
+                        error_count += 1
+                        st.error(f"❌ Nota {idx+1}: Terjadi kesalahan - {str(e)}")
+                
+                if success_count > 0:
+                    st.balloons()
+                st.info(f"🎯 Selesai! Berhasil: {success_count}, Gagal: {error_count}")
 
 # TAB 2: INPUT MANUAL
 with tab2:
