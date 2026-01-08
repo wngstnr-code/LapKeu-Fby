@@ -9,20 +9,24 @@ Aplikasi web berbasis AI untuk mencatat dan mengelola pengeluaran bulanan secara
 - AI otomatis membaca dan mengekstrak data:
   - Nama toko
   - Tanggal transaksi
+  - **Kategori barang** (Fashion, Food & Drink, Snack, Grocery, Alat Tulis Kantor, Skincare, Bodycare, Make Up, House Hold)
   - Daftar barang yang dibeli
   - Jumlah, harga satuan, dan total per item
 - Data langsung tersimpan ke Google Sheets
 
 ### ✍️ Input Manual
 - Input transaksi secara manual jika tidak punya foto nota
+- **Pilih kategori dari dropdown** untuk setiap barang
 - Tambah/kurangi jumlah barang dengan mudah
 - Mobile-friendly dengan tombol yang besar
+- Layout 4 kolom: Nama Barang | Kategori | Jumlah | Harga Satuan
 
 ### 📊 Google Sheets Integration
 - **Sheet otomatis per bulan** (Januari 2026, Februari 2026, dst)
+- **Tracking per kategori** untuk analisis pengeluaran
 - Header dengan format bold
 - Timestamp setiap input data
-- Data tersimpan rapi dengan kolom: Tanggal, Toko, Nama Barang, Jumlah, Harga Satuan, Total Item, Input Time
+- Data tersimpan rapi dengan kolom: Tanggal, Toko, **Kategori**, Nama Barang, Jumlah, Harga Satuan, Total Item, Input Time
 
 ## 🚀 Demo
 
@@ -141,18 +145,33 @@ Klik **Deploy** dan tunggu 2-3 menit!
 ### Input Manual
 1. Buka tab **"✍️ Input Manual"**
 2. Isi nama toko dan tanggal
-3. Isi detail barang (nama, jumlah, harga)
+3. Isi detail barang (nama, **kategori**, jumlah, harga)
 4. Klik **"➕ Tambah Barang"** jika ingin tambah item
 5. Klik **"💾 Simpan"** untuk menyimpan ke Google Sheets
+
+## 🏷️ Kategori Pengeluaran
+
+Aplikasi mendukung 9 kategori untuk memudahkan tracking pengeluaran:
+
+1. **Fashion** - Pakaian, sepatu, aksesoris
+2. **Food & Drink** - Makanan siap saji, minuman, kopi
+3. **Snack** - Makanan ringan, cemilan, biskuit
+4. **Grocery** - Sayuran, buah, bumbu dapur, bahan masak
+5. **Alat Tulis Kantor** - Pulpen, kertas, map, sticky notes
+6. **Skincare** - Facial wash, toner, serum, moisturizer
+7. **Bodycare** - Sabun mandi, shampoo, lotion
+8. **Make Up** - Foundation, lipstik, mascara
+9. **House Hold** - Pembersih, detergen, pengharum ruangan
 
 ## 📊 Format Google Sheets
 
 Setiap bulan akan otomatis dibuatkan sheet baru dengan format:
 
-| Tanggal | Toko | Nama Barang | Jumlah | Harga Satuan | Total Item | Input Time |
-|---------|------|-------------|--------|--------------|------------|------------|
-| 2026-01-08 | Indomaret | Indomie | 5 | 3500 | 17500 | 2026-01-08 10:30:15 |
-| 2026-01-08 | Alfamart | Susu | 2 | 15000 | 30000 | 2026-01-08 11:15:30 |
+| Tanggal | Toko | Kategori | Nama Barang | Jumlah | Harga Satuan | Total Item | Input Time |
+|---------|------|----------|-------------|--------|--------------|------------|------------|
+| 2026-01-08 | Indomaret | Snack | Indomie | 5 | 3500 | 17500 | 2026-01-08 10:30:15 |
+| 2026-01-08 | Guardian | Skincare | Facial Wash | 1 | 45000 | 45000 | 2026-01-08 11:15:30 |
+| 2026-01-08 | Alfamart | Grocery | Bawang Merah | 1 | 25000 | 25000 | 2026-01-08 12:00:00 |
 
 ## 🔒 Keamanan
 
