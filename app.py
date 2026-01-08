@@ -6,34 +6,37 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
-# --- FUNGSI LOAD CREDENTIALS (AMAN UNTUK DEPLOY) ---
+# Custom CSS untuk Font Poppins
+st.markdown("""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    html, body, [class*="css"]  {
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', sans-serif;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 def load_secrets():
-    """
-    Fungsi pintar ini akan mengecek:
-    1. Apakah jalan di Streamlit Cloud? (Pakai st.secrets)
-    2. Apakah jalan di Lokal? (Pakai file credentials.json & secrets.toml)
-    """
-    # Cek API KEY
     if "GOOGLE_API_KEY" in st.secrets:
         api_key = st.secrets["GOOGLE_API_KEY"]
     else:
-        # Fallback manual jika belum setting secrets (opsional)
         api_key = "GANTI_DENGAN_API_KEY_GEMINI_JIKA_ERROR" 
         
-    # Cek Google Sheet Credentials
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     
     if "gcp_json" in st.secrets:
-        # Jika di Cloud
         creds_dict = dict(st.secrets["gcp_json"])
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     else:
-        # Jika di Lokal (Laptop sendiri)
         creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
         
     return api_key, creds
 
-# --- KONFIGURASI AWAL ---
 SHEET_NAME = "Laporan Keuangan Feby" 
 
 try:
@@ -45,13 +48,12 @@ except Exception as e:
     st.error(f"Error Konfigurasi: {e}. Pastikan file credentials.json ada atau Secrets sudah diatur.")
     st.stop()
 
-# --- FUNGSI UTAMA ---
 def save_to_gsheet(data_json):
     try:
         clean_json = data_json.replace("```json", "").replace("```", "").strip()
         data = json.loads(clean_json)
         
-        # Logika Ganti Sheet per Bulan
+        # Sheet per bulan
         tgl_str = data.get('tanggal', datetime.now().strftime('%Y-%m-%d'))
         try:
             tgl_obj = datetime.strptime(tgl_str, '%Y-%m-%d')
@@ -63,7 +65,6 @@ def save_to_gsheet(data_json):
 
         sh = client.open(SHEET_NAME)
 
-        # Cek/Buat Sheet
         try:
             worksheet = sh.worksheet(sheet_title)
         except gspread.exceptions.WorksheetNotFound:
@@ -71,7 +72,7 @@ def save_to_gsheet(data_json):
             worksheet.append_row(["Tanggal", "Toko", "Nama Barang", "Jumlah", "Harga Satuan", "Total Item", "Input Time"])
             worksheet.format('A1:G1', {'textFormat': {'bold': True}})
 
-        # Masukkan Data
+        # Insert data
         rows_to_add = []
         waktu = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         for item in data['items']:
@@ -90,10 +91,8 @@ def process_receipt(image):
     response = model.generate_content([prompt, image])
     return response.text
 
-# --- TAMPILAN WEB ---
 st.title("💰 AI Monthly Money Talita Feby")
 
-# Pilihan metode input
 tab1, tab2 = st.tabs(["📷 Scan Nota", "✍️ Input Manual"])
 
 # TAB 1: SCAN NOTA
@@ -114,7 +113,6 @@ with tab1:
 with tab2:
     st.subheader("Input Transaksi Manual")
     
-    # Inisialisasi session state untuk tracking jumlah items
     if 'num_items' not in st.session_state:
         st.session_state.num_items = 1
     
@@ -132,7 +130,7 @@ with tab2:
         
         items_data = []
         for i in range(st.session_state.num_items):
-            st.write(f"**Barang #{i+1}**")
+            st.write(f"**Barang {i+1}**")
             col_a, col_b, col_c = st.columns(3)
             
             with col_a:
@@ -142,7 +140,7 @@ with tab2:
             with col_c:
                 harga_satuan = st.number_input(f"Harga Satuan (Rp)", key=f"harga_{i}", min_value=0, value=0, step=100)
             
-            if nama_barang:  # Hanya tambahkan jika ada nama barang
+            if nama_barang:
                 total = jumlah * harga_satuan
                 items_data.append({
                     "nama": nama_barang,
@@ -160,24 +158,21 @@ with tab2:
             elif len(items_data) == 0:
                 st.error("Minimal 1 barang harus diisi!")
             else:
-                # Buat JSON manual
                 manual_data = {
                     "toko": toko,
                     "tanggal": tanggal.strftime('%Y-%m-%d'),
                     "items": items_data
                 }
                 
-                # Simpan ke Google Sheet
                 success, msg = save_to_gsheet(json.dumps(manual_data))
                 if success: 
                     st.success(msg)
                     st.balloons()
-                    # Reset setelah berhasil
                     st.session_state.num_items = 1
                 else: 
                     st.error(msg)
     
-    # Tombol tambah/kurang barang DI LUAR form
+    # Tombol tambah/kurang barang
     st.write("---")
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
