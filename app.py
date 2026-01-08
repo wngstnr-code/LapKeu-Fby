@@ -6,20 +6,11 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
-# Custom CSS untuk Font Poppins
-st.markdown("""
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-    
-    html, body, [class*="css"]  {
-        font-family: 'Poppins', sans-serif;
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Poppins', sans-serif;
-    }
-</style>
-""", unsafe_allow_html=True)
+def load_css(style_css):
+    with open(style_css) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+load_css("style.css")
 
 def load_secrets():
     if "GOOGLE_API_KEY" in st.secrets:
@@ -106,7 +97,7 @@ with tab1:
     if uploaded_file:
         img = Image.open(uploaded_file)
         st.image(img, width=250)
-        if st.button("SIKATSSS", key="btn_scan"):
+        if st.button("Proses", key="btn_scan"):
             with st.spinner('AI sedang bekerja...'):
                 res = process_receipt(img)
                 success, msg = save_to_gsheet(res)
@@ -130,7 +121,6 @@ with tab2:
             tanggal = st.date_input("Tanggal Transaksi", value=datetime.now())
         
         st.write("---")
-        st.write("**Detail Barang**")
         
         items_data = []
         for i in range(st.session_state.num_items):

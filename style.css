@@ -1,0 +1,293 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    html, body, [class*="css"]  {
+        font-family: 'Poppins', sans-serif;
+        color: white;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', sans-serif;
+        color: white !important;
+    }
+    
+    /* Background warna #FEB6C1 */
+    .main {
+        background-color: #FEB6C1;
+    }
+    
+    .stApp {
+        background-color: #FEB6C1;
+    }
+    
+    /* Text di luar box putih */
+    p, span, label,  {
+        color: white !important;
+    }
+    
+    /* Subheader putih */
+    .stSubheader {
+        color: white !important;
+    }
+    
+    /* Tab text putih dan besar */
+    .stTabs [data-baseweb="tab"] {
+        color: white !important;
+        font-size: 18px !important;
+        font-weight: 500 !important;
+        padding: 12px 20px !important;
+    }
+    
+    .stTabs [data-baseweb="tab"] p {
+        font-size: 18px !important;
+        font-weight: 500 !important;
+        margin: 0 !important;
+    }
+    
+    .stTabs [data-baseweb="tab"] span {
+        font-size: 18px !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Upload Nota label putih */
+    [data-testid="stFileUploader"] label {
+        color: white !important;
+    }
+    
+    /* Label di dalam form putih */
+    .stForm label {
+        color: white !important;
+    }
+    
+    .stForm p {
+        color: white !important;
+    }
+    
+    .stForm strong {
+        color: white !important;
+    }
+    
+    /* Tombol Simpan text hitam */
+    .stForm button {
+        color: black !important;
+    }
+    
+    .stForm button p {
+        color: black !important;
+    }
+    
+    .stForm [data-testid="stFormSubmitButton"] button {
+        color: black !important;
+    }
+    
+    /* Box/Div Form berwarna #D58C94 dengan outline #B57480 */
+    .stForm {
+        background-color: #D58C94 !important;
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px solid #B57480 !important;
+    }
+    
+    /* Upload area box dengan outline #B57480 */
+    [data-testid="stFileUploader"] {
+        background-color: #D58C94 !important;
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px solid #B57480 !important;
+    }
+    
+    [data-testid="stFileUploadDropzone"] {
+        background-color: #D58C94 !important;
+        border: 2px dashed #B57480 !important;
+    }
+    
+    /* === RESPONSIVE DESIGN === */
+    
+    /* Desktop besar (> 1200px) */
+    @media (min-width: 1200px) {
+        .main .block-container {
+            max-width: 1200px;
+            padding: 2rem 3rem;
+        }
+    }
+    
+    /* Tablet & Laptop kecil (768px - 1199px) */
+    @media (max-width: 1199px) and (min-width: 768px) {
+        .main .block-container {
+            padding: 1.5rem 2rem;
+        }
+        
+        h1 {
+            font-size: 2rem !important;
+        }
+    }
+    
+    /* Tablet Portrait & Mobile Landscape (481px - 767px) */
+    @media (max-width: 767px) and (min-width: 481px) {
+        .main .block-container {
+            padding: 1rem 1.5rem;
+        }
+        
+        h1 {
+            font-size: 1.8rem !important;
+        }
+        
+        .stTabs [data-baseweb="tab"] {
+            font-size: 16px !important;
+            padding: 10px 16px !important;
+        }
+        
+        .stTabs [data-baseweb="tab"] p,
+        .stTabs [data-baseweb="tab"] span {
+            font-size: 16px !important;
+        }
+        
+        .stForm {
+            padding: 18px !important;
+        }
+        
+        [data-testid="stFileUploader"] {
+            padding: 18px !important;
+        }
+    }
+    
+    /* Mobile (max 768px) - Target semua HP */
+    @media (max-width: 768px) {
+        /* Container padding lebih kecil */
+        .main .block-container {
+            padding: 1rem !important;
+        }
+        
+        /* Title responsif */
+        h1 {
+            font-size: 1.5rem !important;
+            margin-bottom: 1rem !important;
+        }
+        
+        h2 {
+            font-size: 1.2rem !important;
+        }
+        
+        /* Tab lebih kecil tapi tetap mudah diklik */
+        .stTabs [data-baseweb="tab"] {
+            font-size: 14px !important;
+            padding: 10px 12px !important;
+        }
+        
+        .stTabs [data-baseweb="tab"] p,
+        .stTabs [data-baseweb="tab"] span {
+            font-size: 14px !important;
+        }
+        
+        /* Form padding lebih kecil */
+        .stForm {
+            padding: 15px !important;
+        }
+        
+        [data-testid="stFileUploader"] {
+            padding: 15px !important;
+        }
+        
+        /* Button lebih besar untuk touchscreen */
+        .stButton > button {
+            padding: 12px 20px !important;
+            font-size: 16px !important;
+            min-height: 48px !important;
+            width: 100% !important;
+        }
+        
+        .stForm [data-testid="stFormSubmitButton"] button {
+            padding: 12px 20px !important;
+            font-size: 16px !important;
+            min-height: 48px !important;
+        }
+        
+        /* Input fields lebih besar - mencegah zoom di iOS */
+        .stTextInput input,
+        .stNumberInput input,
+        .stDateInput input,
+        .stSelectbox select {
+            font-size: 16px !important;
+            padding: 12px !important;
+            min-height: 48px !important;
+        }
+        
+        /* Upload dropzone lebih compact */
+        [data-testid="stFileUploadDropzone"] {
+            min-height: 120px !important;
+            padding: 15px !important;
+        }
+        
+        /* Image preview responsive */
+        img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+        
+        /* Column gap lebih kecil */
+        [data-testid="column"] {
+            padding: 0 0.25rem !important;
+        }
+    }
+    
+    /* Mobile Portrait - HP kecil (max 480px) */
+    @media (max-width: 480px) {
+        .main .block-container {
+            padding: 0.75rem !important;
+        }
+        
+        h1 {
+            font-size: 1.3rem !important;
+        }
+        
+        h2 {
+            font-size: 1.1rem !important;
+        }
+        
+        .stTabs [data-baseweb="tab"] {
+            font-size: 13px !important;
+            padding: 8px 10px !important;
+        }
+        
+        .stTabs [data-baseweb="tab"] p,
+        .stTabs [data-baseweb="tab"] span {
+            font-size: 13px !important;
+        }
+        
+        .stForm {
+            padding: 12px !important;
+        }
+        
+        [data-testid="stFileUploader"] {
+            padding: 12px !important;
+        }
+        
+        /* Font lebih kecil untuk fit content */
+        .stForm p {
+            font-size: 14px !important;
+        }
+        
+        /* Input lebih compact */
+        .stTextInput input,
+        .stNumberInput input,
+        .stDateInput input,
+        .stSelectbox select {
+            padding: 10px !important;
+            font-size: 15px !important;
+        }
+    }
+    
+    /* iPhone SE & HP sangat kecil (max 375px) */
+    @media (max-width: 375px) {
+        h1 {
+            font-size: 1.2rem !important;
+        }
+        
+        .stTabs [data-baseweb="tab"] {
+            font-size: 12px !important;
+            padding: 6px 8px !important;
+        }
+        
+        .stForm {
+            padding: 10px !important;
+        }
+    }
