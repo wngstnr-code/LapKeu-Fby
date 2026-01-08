@@ -91,7 +91,7 @@ def process_receipt(image):
     return response.text
 
 # --- TAMPILAN WEB ---
-st.title("💰 AI Keuangan Bulanan Talita Feby")
+st.title("💰 AI Monthly Money Talita Feby")
 
 # Pilihan metode input
 tab1, tab2 = st.tabs(["📷 Scan Nota", "✍️ Input Manual"])
